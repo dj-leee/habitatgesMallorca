@@ -1,7 +1,8 @@
 import './components/header-component.js'
 import './components/prompt-input.js'
 import './components/tabla.js'
-import './components/main.js'
+import './components/main-component.js'
 import './components/logo.js'
 import './components/map-component.js'
-
+import './components/footer-component.js'
+import './components/title-component.js'

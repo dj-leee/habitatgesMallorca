@@ -1,74 +1,52 @@
-/**
- * Componente Tabla
- * Gestiona la carga de datos, el scroll infinito y la visualización de alojamientos.
- */
+import { store } from '../redux/store.js'
+import { setPinElement, setPinElements } from '../redux/map-slice.js'
+
 export class Tabla extends HTMLElement {
     constructor() {
         super();
+        this.shadow = this.attachShadow({ mode: 'open' })
         this.data = [];
         this.page = 0;
         this.PAGE_SIZE = 40;
     }
 
-    connectedCallback() {
+    async connectedCallback() {
+        await this.fetchData();
         this.render();
-        this.fetchData();
     }
 
-    /**
-     * Carga los datos desde el archivo local JSON.
-     */
     async fetchData() {
         try {
-            const response = await fetch('./data/data.json');
+            const response = await fetch('./data/groupedData.json');
             if (!response.ok) throw new Error("No se pudo cargar el archivo JSON");
             
-            const json = await response.json();
-            this.data = json;
-            
-            document.dispatchEvent(new CustomEvent('data-ready', {
-                detail: { count: this.data.length },
-                bubbles: true
-            }));
-
-            this.list.innerHTML = '';
-            this.loadMore();
+            this.data  = await response.json();
         } catch (error) {
             console.error("Error en Tabla:", error);
-            this.list.innerHTML = '<li class="error">⚠️ No se pudo cargar la lista de alojamientos.</li>';
         }
     }
 
     render() {
-        this.innerHTML = `
+        this.shadow.innerHTML = `
             <style>
                 :host {
                     display: block;
                 }
 
-                #items-list {
+                .items-list {
                     list-style: none;
                     display: flex;
                     flex-direction: column;
                     gap: 6px;
-                    max-height: calc(100vh - 160px);
+                    max-height: 85vh;
                     overflow-y: auto;
                     padding-right: 4px;
                 }
 
-                #items-list::before {
-                    content: 'ALOJAMIENTOS';
-                    font-size: 0.62rem;
-                    font-weight: 600;
-                    letter-spacing: 0.1em;
-                    color: var(--text-muted);
-                    padding-bottom: 8px;
-                }
-
-                #items-list::-webkit-scrollbar       { width: 4px; }
-                #items-list::-webkit-scrollbar-track { background: transparent; }
-                #items-list::-webkit-scrollbar-thumb { background: var(--text-muted); border-radius: 99px; }
-                #items-list::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+                .items-list::-webkit-scrollbar       { width: 4px; }
+                .items-list::-webkit-scrollbar-track { background: transparent; }
+                .items-list::-webkit-scrollbar-thumb { background: var(--text-muted); border-radius: 99px; }
+                .items-list::-webkit-scrollbar-thumb:hover { background: var(--accent); }
 
                 .card {
                     display: flex;
@@ -136,30 +114,61 @@ export class Tabla extends HTMLElement {
                     font-size: 0.85rem;
                 }
             </style>
-            <ul id="items-list">
-                <li class="skeleton"></li>
-                <li class="skeleton"></li>
-                <li class="skeleton"></li>
-                <li class="skeleton"></li>
-                <li class="skeleton"></li>
+            <ul class="items-list">
+
             </ul>
         `;
-        this.list = this.querySelector('#items-list');
-        this.addEventListeners();
-    }
+        
+        const itemList = this.shadow.querySelector('.items-list');
 
-    createCard(item, index) {
-        const li = document.createElement('li');
-        li.className = 'card';
-        li.dataset.address = item.address ?? '';
-        li.dataset.lat = item.latitude ?? '';
-        li.dataset.lng = item.longitude ?? '';
+        Object.keys(this.data).forEach(element => {
+            const li = document.createElement('li');
+            li.classList.add('group');
+            li.dataset.name = element
 
-        li.innerHTML = `
-            <strong>${item.name}</strong>
-            <span>${item.location || 'Ubicación no disponible'}</span>
-        `;
-        return li;
+            const strong  = document.createElement('strong');
+            strong.textContent = element;
+            
+            li.appendChild(strong);
+            itemList.appendChild(li);
+        });
+
+        // this.data.filter(element => element.latitude && element.longitude).slice(0, 10).forEach((element) => {
+        //     const li = document.createElement('li');
+        //     li.classList.add('card');
+        //     li.dataset.name = element.name ?? '';
+        //     li.dataset.latitude = element.latitude ?? '';
+        //     li.dataset.longitude = element.longitude ?? '';
+
+        //     const strong  = document.createElement('strong');
+        //     strong.textContent = element.name;
+
+        //     const span = document.createElement('span');
+        //     span.textContent = element.location || 'Ubicación no disponible';
+
+        //     li.appendChild(strong);
+        //     li.appendChild(span);
+        //     itemList.appendChild(li);
+        // });
+
+        itemList.addEventListener('click', event => {
+            if(event.target.closest('.card')){
+                const card = event.target.closest('.card');
+
+                const pinElement = {
+                    name: card.dataset.name,
+                    latitude: card.dataset.latitude,
+                    longitude: card.dataset.longitude
+                }
+
+                store.dispatch(setPinElement(pinElement))
+            }
+
+             if(event.target.closest('.group')){
+                const group = event.target.closest('.group');
+                store.dispatch(setPinElements(this.data[group.dataset.name]))
+            }
+        });
     }
 
     loadMore() {

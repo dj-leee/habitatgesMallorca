@@ -11,15 +11,17 @@ export class Main extends HTMLElement {
   render() {
     this.shadow.innerHTML = `
       <style>
+
+        :host{
+          display: flex;
+          flex-direction: column;
+          height: 100%;
+        }
         main {
           display: grid;
           grid-template-columns: 1fr 360px;
-          gap: var(--gap);
-          padding: var(--gap);
-          flex: 1;
+          height: 80vh;
           align-items: start;
-          overflow-y: hidden;
-          
         }
       </style>
       <main>

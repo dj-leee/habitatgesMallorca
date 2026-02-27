@@ -13,7 +13,10 @@
   },
   "dependencies": {
     "@googlemaps/js-api-loader": "^2.0.2",
-    "papaparse": "^5.5.3"
+    "@reduxjs/toolkit": "^2.11.2",
+    "lodash-es": "^4.17.23",
+    "papaparse": "^5.5.3",
+    "redux": "^5.0.1"
   },
   "devDependencies": {
     "vite": "^7.3.1"
