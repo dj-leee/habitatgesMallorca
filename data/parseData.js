@@ -4,7 +4,7 @@
     const papaparse = require('papaparse');
 
     try {
-        const file = await fs.readFile("habitatges_turistics_mallorca.csv", "utf-8");
+        const file = await fs.readFile("./habitatges_turistics_mallorca.csv", "utf-8");
 
         const result = await papaparse.parse(file, {
             header: true,
@@ -39,7 +39,7 @@
 
         const ordenadoPorLocalidad = dataUpdate.sort((a, b) => a.location.localeCompare(b.location));
 
-        await fs.writeFile('motorUpdate.json', JSON.stringify(ordenadoPorLocalidad, null, 2), 'utf-8')
+        await fs.writeFile('./data.json', JSON.stringify(ordenadoPorLocalidad, null, 2), 'utf-8')
 
         console.log(dataUpdate);
 
