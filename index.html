@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Explorador de alojamientos turísticos de Mallorca." />
+  <title>Habitatges Mallorca</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <header>
+    <div class="logo">🏠</div>
+    <h1>Habitatges <span>Mallorca</span></h1>
+    <span id="count-badge">Cargando...</span>
+  </header>
+
+  <main>
+    <iframe
+      id="google-map"
+      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d12275.662585685894!2d2.861481847235422!3d39.71907838873853!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1297c412ba008fd3%3A0x5acb49502680cc3f!2s07360%20Lloseta%2C%20Illes%20Balears!5e0!3m2!1ses!2ses!4v1771576832909!5m2!1ses!2ses"
+      allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+      title="Mapa de Mallorca"
+    ></iframe>
+
+    <ul id="items-list">
+      <li class="skeleton"></li>
+      <li class="skeleton"></li>
+      <li class="skeleton"></li>
+      <li class="skeleton"></li>
+      <li class="skeleton"></li>
+    </ul>
+  </main>
+
+  <footer>
+    <input type="text" id="search-input" placeholder="Acción futura..." />
+  </footer>
+
+  <script src="main.js" defer></script>
+</body>
+</html>

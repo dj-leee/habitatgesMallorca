@@ -1,0 +1,17 @@
+{
+  "name": "Example",
+  "version": "1.0.0",
+  "description": "A sample JSON file",
+  "items": [
+    {
+      "id": 1,
+      "title": "Item One",
+      "value": "Example value"
+    },
+    {
+      "id": 2,
+      "title": "Item Two",
+      "value": "Another value"
+    }
+  ]
+}
